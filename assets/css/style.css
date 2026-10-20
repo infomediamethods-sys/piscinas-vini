@@ -651,3 +651,20 @@ body[data-com-pedido] .rodape { padding-bottom: var(--space-10); }
 .aviso-pendente { background: #FCEFDA; }
 .cabeca + .aviso-pendente { max-width: 48rem; }
 @media (min-width: 900px) { .rodape__topo { grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); } }
+
+/* Ajustes do Armin no celular — 2026-10-20 13:20 (feitos pelo gerente do projeto no Claude Desktop) */
+@media (max-width: 899px) {
+  /* rótulo do herói da home um pouco mais grosso e legível */
+  .heroi-agua .rotulo { font-weight: 600; opacity: 1; }
+  /* "Você só aproveita a água." no meio da foto, alinhado à esquerda */
+  .faixa-foto { align-items: center; }
+  .faixa-foto h2 { padding-block: var(--space-8); }
+  .faixa-foto::before { background: linear-gradient(180deg, rgb(6 42 74 / 0.15) 0%, rgb(6 42 74 / 0.5) 50%, rgb(6 42 74 / 0.15) 100%); }
+  /* "Como você acompanha": mockup do celular e botão centralizados */
+  .relatorio .celular { justify-self: center; }
+  .relatorio .acoes { justify-content: center; }
+  /* "Três passos": botão centralizado */
+  .passos-grade .acoes { justify-content: center; }
+}
+/* Sem linha de divisão acima da onda: a última pergunta das Dúvidas não tem fio embaixo */
+.duvidas details:last-of-type { border-bottom: 0; }
