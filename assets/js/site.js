@@ -31,6 +31,7 @@
   var grade = document.querySelector('[data-catalogo]');
   if (!grade) return;
   var CHAVE = 'vava-pedido';
+  var MAX = 20; /* máximo por item */
   var barra = document.querySelector('[data-pedido]');
   var lista = barra.querySelector('[data-pedido-lista]');
   var contador = barra.querySelector('[data-pedido-contador]');
@@ -40,7 +41,7 @@
   grade.querySelectorAll('[data-produto]').forEach(function (c) { nomes[c.getAttribute('data-produto')] = c.getAttribute('data-nome'); });
   var ler = function () { try { return JSON.parse(localStorage.getItem(CHAVE)) || {}; } catch (e) { return {}; } };
   var pedido = ler();
-  Object.keys(pedido).forEach(function (k) { if (!nomes[k] || !(pedido[k] > 0)) delete pedido[k]; });
+  Object.keys(pedido).forEach(function (k) { if (!nomes[k] || !(pedido[k] > 0)) delete pedido[k]; else pedido[k] = Math.min(MAX, pedido[k]); });
 
   function salvar() { try { localStorage.setItem(CHAVE, JSON.stringify(pedido)); } catch (e) {} }
   function render() {
@@ -59,6 +60,7 @@
       li.querySelector('output').textContent = pedido[k];
       li.querySelector('[data-menos]').addEventListener('click', function () { mudar(k, -1); });
       li.querySelector('[data-mais]').addEventListener('click', function () { mudar(k, 1); });
+      li.querySelector('[data-mais]').disabled = pedido[k] >= MAX;
       lista.appendChild(li);
     });
     var itens = ids.map(function (k) { return pedido[k] + '× ' + nomes[k]; }).join(', ');
@@ -66,19 +68,26 @@
     grade.querySelectorAll('[data-produto]').forEach(function (c) {
       var q = pedido[c.getAttribute('data-produto')] || 0;
       var b = c.querySelector('[data-adicionar]');
-      b.setAttribute('aria-pressed', q > 0 ? 'true' : 'false');
-      b.querySelector('[data-rotulo]').textContent = q > 0 ? 'No pedido (' + q + ')' : 'Adicionar';
+      var qtd = c.querySelector('[data-qtd]');
+      var focoNoControle = qtd.contains(document.activeElement);
+      b.hidden = q > 0;
+      qtd.hidden = q === 0;
+      qtd.querySelector('output').textContent = q;
+      qtd.querySelector('[data-card-mais]').disabled = q >= MAX;
+      if (q === 0 && focoNoControle) b.focus();
     });
   }
   function mudar(k, d) {
-    pedido[k] = (pedido[k] || 0) + d;
+    pedido[k] = Math.min(MAX, (pedido[k] || 0) + d);
     if (pedido[k] <= 0) delete pedido[k];
     salvar(); render();
   }
   grade.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-adicionar]');
+    var b = e.target.closest('[data-adicionar], [data-card-mais], [data-card-menos]');
     if (!b) return;
-    mudar(b.closest('[data-produto]').getAttribute('data-produto'), 1);
+    var k = b.closest('[data-produto]').getAttribute('data-produto');
+    mudar(k, b.hasAttribute('data-card-menos') ? -1 : 1);
+    if (b.hasAttribute('data-adicionar')) b.closest('[data-produto]').querySelector('[data-card-mais]').focus();
   });
   document.querySelectorAll('[data-guia-adicionar]').forEach(function (b) {
     b.addEventListener('click', function () {

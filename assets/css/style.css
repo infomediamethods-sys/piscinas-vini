@@ -364,18 +364,18 @@ a.card-texto .card-foto__seta { text-decoration: underline; text-underline-offse
 /* ---------- Marcas ---------- */
 .marcas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--linha); }
 .marcas li {
-  display: grid; place-items: center; min-height: 88px; padding: var(--space-4); border-bottom: 1px solid var(--linha);
+  display: grid; place-items: center; min-height: 88px; padding: var(--space-4); border-bottom: 1px solid var(--linha); border-left: 1px solid var(--linha);
   font-family: var(--fonte-titulo); font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; color: var(--ink-2); text-align: center;
 }
-.marcas li:nth-child(odd) { border-right: 1px solid var(--linha); }
-.marcas li:last-child:nth-child(odd) { grid-column: 1 / -1; border-right: 0; }
+/* Celular: 2 colunas, divisória só entre as colunas; o último ímpar ocupa a linha inteira */
+.marcas li:nth-child(odd) { border-left: 0; }
+.marcas li:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .marcas + .link-cta { margin-top: var(--space-5); }
+/* Computador: uma linha de colunas iguais, divisória à esquerda de todas menos a primeira */
 @media (min-width: 900px) {
-  .marcas { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-  .marcas li, .marcas li:last-child:nth-child(odd) { grid-column: auto; border-right: 1px solid var(--linha); }
-  .marcas li:last-child { border-right: 0; }
-  .marcas li { border-right: 1px solid var(--linha); min-height: 112px; font-size: 1.5rem; }
-  .marcas li:last-child { border-right: 0; }
+  .marcas { grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); grid-template-columns: none; }
+  .marcas li, .marcas li:nth-child(odd) { grid-column: auto; border-left: 1px solid var(--linha); min-height: 112px; font-size: 1.5rem; }
+  .marcas li:first-child { border-left: 0; }
 }
 
 /* ---------- Dúvidas (acordeão) ---------- */
@@ -503,6 +503,12 @@ a.card-texto .card-foto__seta { text-decoration: underline; text-underline-offse
 .card-produto .botao { grid-column: 1 / -1; justify-self: start; margin-top: var(--space-3); }
 .card-produto .botao[aria-pressed="true"] { background: var(--foam); color: var(--deep); border-color: var(--pool); }
 .card-produto .botao .icone { width: var(--icone-linha); height: var(--icone-linha); }
+/* Depois do 1º toque o botão vira [−] n [+]; em 0 volta para "Adicionar" */
+.card-produto__qtd { grid-column: 1 / -1; justify-self: start; display: inline-flex; align-items: center; gap: var(--space-2); margin-top: var(--space-3); padding: var(--space-1); border-radius: 999px; background: color-mix(in srgb, var(--pool) 10%, transparent); }
+.card-produto__qtd[hidden] { display: none; }
+.card-produto__qtd button { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--pool); background: var(--white); color: var(--deep); font-size: 1.25rem; line-height: 1; cursor: pointer; }
+.card-produto__qtd button:disabled { opacity: 0.4; cursor: default; }
+.card-produto__qtd output { min-width: 3ch; text-align: center; font-weight: 500; color: var(--deep); }
 @media (min-width: 600px) { .catalogo { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 900px) {
   .filtros { flex-wrap: wrap; overflow: visible; margin-inline: 0; padding-inline: 0; }
