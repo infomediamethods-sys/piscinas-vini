@@ -40,6 +40,18 @@
     var r = rnd();
     bolhas.push({ x: rnd(), y: 0.2 + rnd() * 1.2, raio: 3 + 19 * r * r, vel: 20 + rnd() * 60, amp: 4 + rnd() * 10, fase: rnd() * 6.28, amb: i < 4, ordem: i, alpha: i < 4 ? 1 : 0 });
   }
+  /* Ajustes r4 (S3): UMA bolha pré-desenhada num canvas fora da tela (64px, gradiente + contorno + brilho);
+     a cada quadro só drawImage escalado com o globalAlpha da bolha (antes: um createRadialGradient por bolha por quadro). */
+  var S = 64, sprite = document.createElement('canvas');
+  sprite.width = sprite.height = S;
+  (function () {
+    var c = sprite.getContext('2d'), m = S / 2, R = m - 1.5;
+    var g = c.createRadialGradient(m, m, 0, m, m, R);
+    g.addColorStop(0, 'rgba(56,211,230,0.10)'); g.addColorStop(1, 'rgba(56,211,230,0)');
+    c.beginPath(); c.arc(m, m, R, 0, 6.2832); c.fillStyle = g; c.fill();
+    c.lineWidth = 1.5 * R / 12; c.strokeStyle = 'rgba(255,255,255,0.55)'; c.stroke();
+    c.beginPath(); c.arc(m - R * 0.3, m - R * 0.3, R * 0.18, 0, 6.2832); c.fillStyle = 'rgba(255,255,255,0.8)'; c.fill();
+  })();
   function dimensionar() {
     L = canvas.clientWidth; A = canvas.clientHeight;
     canvas.width = Math.round(L * dpr); canvas.height = Math.round(A * dpr);
@@ -67,14 +79,8 @@
       if (b.y * A < -b.raio) { b.y = 1 + b.raio / A; b.x = rnd(); }
       var px = b.x * L + Math.sin(t * 1.2 + b.fase) * b.amp;
       var py = b.y * A;
-      var g = ctx.createRadialGradient(px, py, 0, px, py, b.raio);
-      g.addColorStop(0, 'rgba(56,211,230,0.10)'); g.addColorStop(1, 'rgba(56,211,230,0)');
       ctx.globalAlpha = 0.9 * b.alpha;
-      ctx.beginPath(); ctx.arc(px, py, b.raio, 0, 6.2832);
-      ctx.fillStyle = g; ctx.fill();
-      ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.stroke();
-      ctx.beginPath(); ctx.arc(px - b.raio * 0.3, py - b.raio * 0.3, b.raio * 0.18, 0, 6.2832);
-      ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.fill();
+      ctx.drawImage(sprite, px - b.raio, py - b.raio, b.raio * 2, b.raio * 2);
     }
     ctx.globalAlpha = 1;
     requestAnimationFrame(quadro);

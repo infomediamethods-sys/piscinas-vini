@@ -96,8 +96,8 @@ p a, li a { min-height: 0; }
 body[data-menu="true"] { overflow: hidden; }
 
 /* Entrada de seção (main.js adiciona .visivel). Sem JS, tudo aparece. */
-.js .revelar { opacity: 0; transform: translateY(16px); transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
-.js .revelar.visivel { opacity: 1; transform: none; }
+.js .revelar { opacity: 0; transition: opacity 0.25s var(--ease-out); }
+.js .revelar.visivel { opacity: 1; }
 
 /* Botão fixo de WhatsApp no celular: aparece em TODAS as páginas depois de rolar (lição: só funcionava na home) */
 .whatsapp-fixo {
@@ -121,22 +121,15 @@ body[data-menu="true"] { overflow: hidden; }
 .foto-pendente__titulo { font-weight: 600; line-height: 1.45; color: #231f20; max-width: 34ch; margin-inline: auto; overflow-wrap: anywhere; }
 .foto-pendente__meta { font-size: 0.875rem; }
 
-/* Lenis (rolagem suave): o próprio Lenis põe html.lenis; com ele ativo, o scroll-behavior do CSS sai do caminho */
-html.lenis, html.lenis body { height: auto; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-.lenis.lenis-stopped { overflow: clip; }
-.lenis.lenis-smooth iframe { pointer-events: none; }
-
 /* Movimento reduzido: desliga tudo */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .js .revelar { opacity: 1; transform: none; }
+  .js .revelar { opacity: 1; }
 }
 
 /* "Onde fica": mapa + cartão de endereço (componentes/mapa.html, §0 "Mapa"). Regra do Armin, 15/10/2026.
-   O mapa não captura toque nem roda (senão prende a rolagem e o Lenis): clicar abre o Google Maps. */
+   O mapa não captura toque nem roda (senão prende a rolagem): clicar abre o Google Maps. */
 .local__grade { display: grid; gap: var(--space-6); }
 .local__cartao { display: flex; flex-direction: column; gap: var(--space-4); }
 .local__endereco { font-style: normal; line-height: 1.6; }

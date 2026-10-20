@@ -6,14 +6,14 @@
   var reduzir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* Rolagem: UM canal só para tudo que reage à rolagem (regra do Armin, 19/10/2026: rolagem leve no celular).
-     window.aoRolar(fn) chama fn({scroll, progress}) no máximo uma vez por quadro, pelo Lenis quando ele existe
-     (computador) ou pelo scroll nativo (celular). Dentro de fn: só trocar classe/atributo ou escrever transform/opacity.
+     window.aoRolar(fn) chama fn({scroll, progress}) no máximo uma vez por quadro, pelo scroll nativo
+     (sem Lenis: regra do Armin, 20/10/2026, rolagem nativa em todos os aparelhos). Dentro de fn: só trocar classe/atributo ou escrever transform/opacity.
      NUNCA medir (getBoundingClientRect, offsetTop, scrollHeight) dentro de fn: meça fora, uma vez, e remeça no resize. */
   var ouvintes = [], agendado = false;
   function disparar() {
     agendado = false;
     var max = document.documentElement.scrollHeight - window.innerHeight;
-    var y = window.__lenis ? window.__lenis.scroll : window.scrollY;
+    var y = window.scrollY;
     var dados = { scroll: y, progress: max > 0 ? Math.min(1, Math.max(0, y / max)) : 0 };
     for (var i = 0; i < ouvintes.length; i++) ouvintes[i](dados);
   }
@@ -47,39 +47,42 @@
   if (menu) menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { estado(false); }); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && menu && menu.dataset.aberto === 'true') estado(false); });
 
-  /* Entrada de seção: uma vez, a 15% de visibilidade, stagger de 70ms (máx. 6) */
+  /* Entrada de seção (ajustes r4, 20/10/2026): só opacidade, curta, disparada 25% ANTES do bloco entrar na tela.
+     Numa rolagem rápida (>1200px em <150ms), ou se o bloco já está na tela ou acima dela, aparece na hora, sem
+     transição: nada fica apagado nem "se realoca" quando a pessoa para de rolar. Atraso escalonado máx. 3 × 40ms. */
   var itens = document.querySelectorAll('.revelar');
   if (reduzir || !('IntersectionObserver' in window)) {
     itens.forEach(function (el) { el.classList.add('visivel'); });
   } else {
+    var ultY = window.scrollY, ultT = performance.now(), rapido = false;
+    window.addEventListener('scroll', function () {
+      var y = window.scrollY, t = performance.now();
+      rapido = Math.abs(y - ultY) > 1200 && t - ultT < 150;
+      ultY = y; ultT = t;
+    }, { passive: true });
+    var naHora = function (el) { el.style.transition = 'none'; el.classList.add('visivel'); };
     var obs = new IntersectionObserver(function (entradas) {
       entradas.forEach(function (en) {
         if (!en.isIntersecting) return;
-        var irmaos = Array.prototype.filter.call(en.target.parentNode.children, function (c) { return c.classList.contains('revelar'); });
-        var i = Math.min(irmaos.indexOf(en.target), 5);
-        en.target.style.transitionDelay = (i > 0 ? i * 70 : 0) + 'ms';
-        en.target.classList.add('visivel');
         obs.unobserve(en.target);
+        if (rapido || en.boundingClientRect.top < window.innerHeight) return naHora(en.target);
+        var irmaos = Array.prototype.filter.call(en.target.parentNode.children, function (c) { return c.classList.contains('revelar'); });
+        var i = Math.min(irmaos.indexOf(en.target), 3);
+        en.target.style.transitionDelay = (i > 0 ? i * 40 : 0) + 'ms';
+        en.target.classList.add('visivel');
       });
-    }, { threshold: 0.15 });
-    itens.forEach(function (el) { obs.observe(el); });
-  }
-
-  /* Rolagem suave (Lenis, assets/js/lenis.min.js) SÓ com mouse (computador). No celular a rolagem é a nativa
-     (regra do Armin, 19/10/2026: o syncTouch do Lenis reimplementa o toque em JS e deixava a rolagem lenta e
-     travada no iPhone). Desligada com prefers-reduced-motion. Sem Lenis carregado, o site rola normal. */
-  var mouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  if (!reduzir && mouse && window.Lenis) {
-    var lenis = new window.Lenis({ lerp: 0.1, smoothWheel: true, syncTouch: false, anchors: { offset: -(header ? header.offsetHeight : 0) } });
-    var quadro = function (t) { lenis.raf(t); requestAnimationFrame(quadro); };
-    requestAnimationFrame(quadro);
-    window.__lenis = lenis;
-    lenis.on('scroll', pedir);
+    }, { rootMargin: '0px 0px 25% 0px', threshold: 0 });
+    itens.forEach(function (el) {
+      if (el.getBoundingClientRect().top < window.innerHeight) naHora(el);
+      else obs.observe(el);
+    });
   }
 
   /* Imagens de cima para baixo (regra do Armin, 19/10/2026): depois que a primeira tela carregou (evento load),
      as imagens com loading="lazy" são carregadas uma por vez, na ordem da página, em tempo ocioso. Quando a pessoa
-     rola, a imagem já está no cache: nada "aparece atrasado". Com economia de dados ligada, fica no lazy nativo. */
+     rola, a imagem já está no cache: nada "aparece atrasado". Com economia de dados ligada, fica no lazy nativo.
+     Toda imagem está num <picture> com srcset/sizes: o eager carrega o tamanho que o aparelho escolheria
+     (480/960 no celular), nunca o de 2400px. */
   var conexao = navigator.connection || {};
   if (!conexao.saveData) {
     var fila = Array.prototype.slice.call(document.querySelectorAll('img[loading="lazy"]'));

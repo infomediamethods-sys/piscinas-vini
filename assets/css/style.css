@@ -1,6 +1,5 @@
 /* style.css — Vava Piscinas. Tokens e componentes de specs/design.md §1–§11.
    Espaçamento SEMPRE com var(--space-N) de base.css. Media queries de cada componente DEPOIS das regras base dele. */
-html.lenis [id] { scroll-margin-top: 0; }
 :root {
   --deep: #062A4A;
   --pool: #0E7CB8;
@@ -140,7 +139,7 @@ strong { font-weight: 500; }
   .cabecalho__paginas { display: none; }
   .cabecalho__nav { display: flex; gap: var(--space-6); margin-left: auto; }
   .cabecalho[data-rolado], .cabecalho:not(.cabecalho--sobre-foto) {
-    background: rgb(255 255 255 / 0.85); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    background: rgb(255 255 255 / 0.96);
   }
   .marca img { height: 56px; }
 }
