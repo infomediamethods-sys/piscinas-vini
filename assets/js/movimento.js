@@ -38,7 +38,7 @@
   var bolhas = [];
   for (var i = 0; i < N; i++) {
     var r = rnd();
-    bolhas.push({ x: rnd(), y: 0.2 + rnd() * 1.2, raio: 3 + 19 * r * r, vel: 20 + rnd() * 60, amp: 4 + rnd() * 10, fase: rnd() * 6.28, amb: i < 4 });
+    bolhas.push({ x: rnd(), y: 0.2 + rnd() * 1.2, raio: 3 + 19 * r * r, vel: 20 + rnd() * 60, amp: 4 + rnd() * 10, fase: rnd() * 6.28, amb: i < 4, ordem: i, alpha: i < 4 ? 1 : 0 });
   }
   function dimensionar() {
     L = canvas.clientWidth; A = canvas.clientHeight;
@@ -53,25 +53,30 @@
     if (!rodando) return;
     var dt = Math.min(0.05, (agora - (ultimo || agora)) / 1000); ultimo = agora; t += dt;
     ctx.clearRect(0, 0, L, A);
-    var ativo = progresso > 0.02;
+    /* Ajustes r1 (A1): cada bolha tem opacidade própria que persegue o alvo com suavização, nos dois sentidos,
+       e o alvo de cada uma é escalonado pela ordem: descendo elas surgem aos poucos, subindo se apagam aos poucos. */
     var fator = 0.5 + progresso * 2.2;
+    var k = Math.min(1, dt * 3.5);
     for (var i = 0; i < bolhas.length; i++) {
       var b = bolhas[i];
-      if (!ativo && !b.amb) continue;
-      var v = b.amb && !ativo ? 12 : b.vel * fator;
+      var alvo = b.amb ? 1 : Math.min(1, Math.max(0, (progresso - 0.02 - b.ordem * 0.01) / 0.14));
+      b.alpha += (alvo - b.alpha) * k;
+      var v = 12 + (b.vel * fator - 12) * b.alpha;
       b.y -= (v * dt) / A;
+      if (b.alpha < 0.01) { if (b.y * A < -b.raio) { b.y = 1 + b.raio / A; b.x = rnd(); } continue; }
       if (b.y * A < -b.raio) { b.y = 1 + b.raio / A; b.x = rnd(); }
       var px = b.x * L + Math.sin(t * 1.2 + b.fase) * b.amp;
       var py = b.y * A;
       var g = ctx.createRadialGradient(px, py, 0, px, py, b.raio);
       g.addColorStop(0, 'rgba(56,211,230,0.10)'); g.addColorStop(1, 'rgba(56,211,230,0)');
-      ctx.globalAlpha = 0.9;
+      ctx.globalAlpha = 0.9 * b.alpha;
       ctx.beginPath(); ctx.arc(px, py, b.raio, 0, 6.2832);
       ctx.fillStyle = g; ctx.fill();
       ctx.lineWidth = 1.5; ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.stroke();
       ctx.beginPath(); ctx.arc(px - b.raio * 0.3, py - b.raio * 0.3, b.raio * 0.18, 0, 6.2832);
       ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.fill();
     }
+    ctx.globalAlpha = 1;
     requestAnimationFrame(quadro);
   }
   function ligar(sim) {
