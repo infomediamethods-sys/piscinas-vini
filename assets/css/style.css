@@ -426,8 +426,8 @@ a.card-texto .card-foto__seta { text-decoration: underline; text-underline-offse
   .rodape { padding-top: var(--space-9); }
   .rodape--apos-escuro { padding-top: var(--space-7); }
   .rodape--apos-escuro > .container { padding-top: var(--space-8); }
-  .rodape__topo { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); }
-  .rodape__colunas { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .rodape__topo { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-8); }
+  .rodape__colunas { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1fr); }
 }
 
 /* ---------- Serviços ---------- */
