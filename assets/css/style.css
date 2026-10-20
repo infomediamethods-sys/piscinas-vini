@@ -615,6 +615,7 @@ body[data-com-pedido] .rodape { padding-bottom: var(--space-10); }
 /* ---------- Ajustes r3 (2026-10-20) ---------- */
 /* Avisos dentro de passo, card, plano e relatório */
 .passo .aviso-pendente, .card-servico .aviso-pendente, .relatorio__texto .aviso-pendente { margin-top: var(--space-3); }
+.relatorio__texto .aviso-pendente { margin-top: var(--space-5); }
 .cabeca + .aviso-pendente { margin-bottom: var(--space-6); }
 .plano:has(.aviso-pendente) { grid-template-rows: auto auto auto 1fr auto; }
 /* Onde fica no celular: texto primeiro (com horário e WhatsApp), mapa por último */
@@ -622,3 +623,8 @@ body[data-com-pedido] .rodape { padding-bottom: var(--space-10); }
   .local__mapa { order: 0; }
   .local__fatos { display: grid; gap: var(--space-3); }
 }
+/* revisor ajustes r3 */
+@media (max-width: 599px) { .plano .selo { position: static; justify-self: start; margin-bottom: calc(-1 * var(--space-2)); } }
+.aviso-pendente { background: #FCEFDA; }
+.cabeca + .aviso-pendente { max-width: 48rem; }
+@media (min-width: 900px) { .rodape__topo { grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); } }
