@@ -27,6 +27,10 @@
     var medir = function () { document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px'); };
     medir();
     window.addEventListener('resize', medir);
+    window.addEventListener('load', medir);
+    window.addEventListener('pageshow', medir);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(medir);
+    if ('ResizeObserver' in window) new ResizeObserver(medir).observe(header);
     window.aoRolar(function (d) { header.toggleAttribute('data-rolado', d.scroll > 80); });
   }
 

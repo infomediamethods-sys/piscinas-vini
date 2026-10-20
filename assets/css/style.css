@@ -672,3 +672,8 @@ body[data-com-pedido] .rodape { padding-bottom: var(--space-10); }
 /* Faixa de marcas sem interação (Armin, 2026-10-20 13:31): roda sempre, sempre cinza; mouse e toque não param nem colorem */
 .faixa-marcas, .faixa-marcas * { pointer-events: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
 .faixa-marcas img { transition: none; }
+
+/* Páginas internas: cabeçalho no fluxo (sticky) em vez de fixo + espaço medido por JS.
+   Corrige o vão branco entre o cabeçalho e o herói no iPhone (2026-10-20 13:42): o espaço não depende mais de medir o cabeçalho. */
+.pagina-interna .cabecalho { position: sticky; top: 0; }
+.pagina-interna main { padding-top: 0; }
