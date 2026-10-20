@@ -48,28 +48,35 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && menu && menu.dataset.aberto === 'true') estado(false); });
 
   /* Entrada de seção (ajustes r4, 20/10/2026): só opacidade, curta, disparada 25% ANTES do bloco entrar na tela.
-     Numa rolagem rápida (>1200px em <150ms), ou se o bloco já está na tela ou acima dela, aparece na hora, sem
+     Numa rolagem rápida (>1,2 px/ms), ou se o bloco já está na tela ou acima dela, aparece na hora, sem
      transição: nada fica apagado nem "se realoca" quando a pessoa para de rolar. Atraso escalonado máx. 3 × 40ms. */
   var itens = document.querySelectorAll('.revelar');
   if (reduzir || !('IntersectionObserver' in window)) {
     itens.forEach(function (el) { el.classList.add('visivel'); });
   } else {
-    var ultY = window.scrollY, ultT = performance.now(), rapido = false;
-    window.addEventListener('scroll', function () {
-      var y = window.scrollY, t = performance.now();
-      rapido = Math.abs(y - ultY) > 1200 && t - ultT < 150;
-      ultY = y; ultT = t;
-    }, { passive: true });
-    var naHora = function (el) { el.style.transition = 'none'; el.classList.add('visivel'); };
+    /* velocidade medida pelo canal aoRolar (um valor por quadro): acima de 1,2 px/ms (~20px por quadro) é arrasto,
+       inércia ou âncora suave, e o bloco aparece na hora; rolagem de leitura continua com o fade */
+    var ultY = window.scrollY, ultT = performance.now(), vel = 0;
+    window.aoRolar(function (d) {
+      var t = performance.now();
+      vel = Math.abs(d.scroll - ultY) / Math.max(1, t - ultT);
+      ultY = d.scroll; ultT = t;
+    });
+    var naHora = function (el) {
+      el.style.transition = 'none'; el.classList.add('visivel');
+      requestAnimationFrame(function () { requestAnimationFrame(function () { el.style.transition = ''; }); });
+    };
     var obs = new IntersectionObserver(function (entradas) {
       entradas.forEach(function (en) {
         if (!en.isIntersecting) return;
         obs.unobserve(en.target);
+        var rapido = vel > 1.2 && performance.now() - ultT < 120;
         if (rapido || en.boundingClientRect.top < window.innerHeight) return naHora(en.target);
         var irmaos = Array.prototype.filter.call(en.target.parentNode.children, function (c) { return c.classList.contains('revelar'); });
         var i = Math.min(irmaos.indexOf(en.target), 3);
         en.target.style.transitionDelay = (i > 0 ? i * 40 : 0) + 'ms';
         en.target.classList.add('visivel');
+        en.target.addEventListener('transitionend', function () { en.target.style.transitionDelay = ''; }, { once: true });
       });
     }, { rootMargin: '0px 0px 25% 0px', threshold: 0 });
     itens.forEach(function (el) {

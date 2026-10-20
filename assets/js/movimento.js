@@ -40,18 +40,21 @@
     var r = rnd();
     bolhas.push({ x: rnd(), y: 0.2 + rnd() * 1.2, raio: 3 + 19 * r * r, vel: 20 + rnd() * 60, amp: 4 + rnd() * 10, fase: rnd() * 6.28, amb: i < 4, ordem: i, alpha: i < 4 ? 1 : 0 });
   }
-  /* Ajustes r4 (S3): UMA bolha pré-desenhada num canvas fora da tela (64px, gradiente + contorno + brilho);
-     a cada quadro só drawImage escalado com o globalAlpha da bolha (antes: um createRadialGradient por bolha por quadro). */
-  var S = 64, sprite = document.createElement('canvas');
-  sprite.width = sprite.height = S;
-  (function () {
-    var c = sprite.getContext('2d'), m = S / 2, R = m - 1.5;
-    var g = c.createRadialGradient(m, m, 0, m, m, R);
+  /* Ajustes r4 (S3): cada bolha é pré-desenhada UMA vez num canvas fora da tela, no tamanho final × DPR, com o
+     contorno fixo de 1,5px; a cada quadro só drawImage sem escala (antes: um createRadialGradient por bolha por quadro). */
+  function fazerSprite(r) {
+    var lado = Math.ceil((r + 2) * 2 * dpr), c = document.createElement('canvas');
+    c.width = c.height = lado;
+    var x = c.getContext('2d'), m = lado / dpr / 2;
+    x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var g = x.createRadialGradient(m, m, 0, m, m, r);
     g.addColorStop(0, 'rgba(56,211,230,0.10)'); g.addColorStop(1, 'rgba(56,211,230,0)');
-    c.beginPath(); c.arc(m, m, R, 0, 6.2832); c.fillStyle = g; c.fill();
-    c.lineWidth = 1.5 * R / 12; c.strokeStyle = 'rgba(255,255,255,0.55)'; c.stroke();
-    c.beginPath(); c.arc(m - R * 0.3, m - R * 0.3, R * 0.18, 0, 6.2832); c.fillStyle = 'rgba(255,255,255,0.8)'; c.fill();
-  })();
+    x.beginPath(); x.arc(m, m, r, 0, 6.2832); x.fillStyle = g; x.fill();
+    x.lineWidth = 1.5; x.strokeStyle = 'rgba(255,255,255,0.55)'; x.stroke();
+    x.beginPath(); x.arc(m - r * 0.3, m - r * 0.3, r * 0.18, 0, 6.2832); x.fillStyle = 'rgba(255,255,255,0.8)'; x.fill();
+    return c;
+  }
+  bolhas.forEach(function (b) { b.spr = fazerSprite(b.raio); b.meio = b.spr.width / dpr / 2; });
   function dimensionar() {
     L = canvas.clientWidth; A = canvas.clientHeight;
     canvas.width = Math.round(L * dpr); canvas.height = Math.round(A * dpr);
@@ -80,7 +83,7 @@
       var px = b.x * L + Math.sin(t * 1.2 + b.fase) * b.amp;
       var py = b.y * A;
       ctx.globalAlpha = 0.9 * b.alpha;
-      ctx.drawImage(sprite, px - b.raio, py - b.raio, b.raio * 2, b.raio * 2);
+      ctx.drawImage(b.spr, px - b.meio, py - b.meio, b.meio * 2, b.meio * 2);
     }
     ctx.globalAlpha = 1;
     requestAnimationFrame(quadro);
