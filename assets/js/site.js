@@ -1,10 +1,10 @@
-/* site.js — comportamento próprio da Vava Piscinas (funil de WhatsApp). Sem dependências.
+/* site.js — comportamento próprio da Vavá Piscinas (funil de WhatsApp). Sem dependências.
    Sem JS, todo link de WhatsApp já funciona pelo href estático (mensagem padrão da página).
-   NÚMERO DO WHATSAPP: provisório. Trocar aqui E no href estático dos links (busca por 5500000000000). */
+   NÚMERO DO WHATSAPP: (48) 3334-0055, confirmado pelo Vini em 2026-10-19. Trocar aqui E em _fonte/montar.py (WA). */
 (function () {
   'use strict';
   if (/[?&]rascunho\b/.test(location.search)) document.documentElement.classList.add('ver-rascunho');
-  var WA = '5500000000000';
+  var WA = '554833340055';
   var link = function (texto) { return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(texto); };
 
   /* Qualificador de 3 perguntas (páginas de categoria): as escolhas montam a mensagem; sem escolha, vale a genérica */
