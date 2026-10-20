@@ -50,18 +50,43 @@
     barra.hidden = total === 0;
     document.body.toggleAttribute('data-com-pedido', total > 0);
     contador.textContent = total === 1 ? '1 item' : total + ' itens';
+    /* a lista é recriada: guarda qual item e qual botão tinham o foco para devolver depois */
+    var ativo = document.activeElement, liAtivo = lista.contains(ativo) && ativo.closest('li');
+    var focoK = liAtivo && liAtivo.dataset.k, focoMais = liAtivo && ativo.hasAttribute('data-mais');
+    var ordemAntes = [].map.call(lista.children, function (li) { return li.dataset.k; });
     lista.innerHTML = '';
+    if (total === 0) { barra.removeAttribute('data-aberto'); abrirLista.setAttribute('aria-expanded', 'false'); }
     ids.forEach(function (k) {
       var li = document.createElement('li');
+      li.dataset.k = k;
       li.innerHTML = '<span class="pedido__nome"></span><span class="pedido__qtd">' +
-        '<button type="button" data-menos aria-label="Tirar um">−</button><output></output>' +
-        '<button type="button" data-mais aria-label="Pôr mais um">+</button></span>';
+        '<button type="button" data-menos>−</button><output></output>' +
+        '<button type="button" data-mais>+</button></span>';
       li.querySelector('.pedido__nome').textContent = nomes[k];
+      li.querySelector('[data-menos]').setAttribute('aria-label', 'Tirar um ' + nomes[k]);
+      li.querySelector('[data-mais]').setAttribute('aria-label', 'Pôr mais um ' + nomes[k]);
       li.querySelector('output').textContent = pedido[k];
       li.querySelector('[data-menos]').addEventListener('click', function () { mudar(k, -1); });
       li.querySelector('[data-mais]').addEventListener('click', function () { mudar(k, 1); });
       li.querySelector('[data-mais]').disabled = pedido[k] >= MAX;
       lista.appendChild(li);
+    });
+    if (focoK) {
+      var alvo = lista.querySelector('li[data-k="' + focoK + '"]');
+      if (alvo) {
+        var mais = alvo.querySelector('[data-mais]');
+        (focoMais && !mais.disabled ? mais : alvo.querySelector('[data-menos]')).focus();
+      } else {
+        /* o item zerou: foco no item que ficou no lugar, ou no "Adicionar" do card */
+        var prox = ordemAntes.slice(ordemAntes.indexOf(focoK) + 1).concat(ordemAntes.slice(0, ordemAntes.indexOf(focoK)).reverse())
+          .map(function (k) { return lista.querySelector('li[data-k="' + k + '"]'); }).filter(Boolean)[0];
+        if (prox) prox.querySelector('[data-menos]').focus();
+        else { var ad = grade.querySelector('[data-produto="' + focoK + '"] [data-adicionar]'); ad.hidden = false; ad.focus(); }
+      }
+    }
+    document.querySelectorAll('[data-guia-adicionar]').forEach(function (b) {
+      var todos = b.getAttribute('data-guia-adicionar').split(' ').every(function (k) { return !nomes[k] || pedido[k] > 0; });
+      b.querySelector('[data-rotulo]').textContent = todos ? 'Adicionado ao pedido' : 'Pôr no pedido';
     });
     var itens = ids.map(function (k) { return pedido[k] + '× ' + nomes[k]; }).join(', ');
     enviar.href = link('Olá! Vim pelo site e quero pedir: ' + itens + '. Qual o valor e o prazo? Entrega ou retirada?');
@@ -93,7 +118,6 @@
     b.addEventListener('click', function () {
       b.getAttribute('data-guia-adicionar').split(' ').forEach(function (k) { if (nomes[k] && !pedido[k]) pedido[k] = 1; });
       salvar(); render();
-      b.querySelector('[data-rotulo]').textContent = 'Adicionado ao pedido';
     });
   });
   abrirLista.addEventListener('click', function () {
