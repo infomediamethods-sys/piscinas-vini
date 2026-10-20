@@ -373,8 +373,8 @@ a.card-texto .card-foto__seta { text-decoration: underline; text-underline-offse
 .marcas + .link-cta { margin-top: var(--space-5); }
 /* Computador: uma linha de colunas iguais, divisória à esquerda de todas menos a primeira */
 @media (min-width: 900px) {
-  .marcas { grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); grid-template-columns: none; }
-  .marcas li, .marcas li:nth-child(odd) { grid-column: auto; border-left: 1px solid var(--linha); min-height: 112px; font-size: 1.5rem; }
+  .marcas { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .marcas li, .marcas li:nth-child(odd), .marcas li:last-child:nth-child(odd) { grid-column: auto; border-left: 1px solid var(--linha); min-height: 112px; font-size: 1.5rem; }
   .marcas li:first-child { border-left: 0; }
 }
 
