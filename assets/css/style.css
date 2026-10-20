@@ -677,3 +677,19 @@ body[data-com-pedido] .rodape { padding-bottom: var(--space-10); }
    Corrige o vão branco entre o cabeçalho e o herói no iPhone (2026-10-20 13:42): o espaço não depende mais de medir o cabeçalho. */
 .pagina-interna .cabecalho { position: sticky; top: 0; }
 .pagina-interna main { padding-top: 0; }
+
+/* Ajustes do Armin no celular, rodada 2 — 2026-10-20 14:05 */
+/* Fio claro entre a onda e a seção escura (iPhone): a onda passa 1px por cima da seção de baixo */
+.onda { position: relative; z-index: 1; margin-bottom: -1px; }
+@media (max-width: 899px) {
+  /* "Como você acompanha": o item da grade é a <figure>; centraliza ela e o celular dentro */
+  .relatorio > figure { justify-self: center; width: min(100%, 320px); margin-inline: auto; }
+  .relatorio .celular { margin-inline: auto; }
+  /* "Três passos": título → foto → passos → botão */
+  .passos-grade { gap: var(--space-6); }
+  .passos-grade > div:not(.midia) { display: contents; }
+  .passos-grade .cabeca { order: 1; margin-bottom: 0; }
+  .passos-grade__midia { order: 2; }
+  .passos-grade .passos { order: 3; }
+  .passos-grade .acoes { order: 4; margin-top: 0; }
+}
