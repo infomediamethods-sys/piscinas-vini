@@ -59,7 +59,7 @@
     var ultY = window.scrollY, ultT = performance.now(), vel = 0;
     window.aoRolar(function (d) {
       var t = performance.now();
-      vel = Math.abs(d.scroll - ultY) / Math.max(1, t - ultT);
+      vel = Math.abs(d.scroll - ultY) / Math.min(50, Math.max(1, t - ultT));  /* parada longa antes: o salto foi neste quadro */
       ultY = d.scroll; ultT = t;
     });
     var naHora = function (el) {
@@ -70,7 +70,9 @@
       entradas.forEach(function (en) {
         if (!en.isIntersecting) return;
         obs.unobserve(en.target);
-        var rapido = vel > 1.2 && performance.now() - ultT < 120;
+        /* o observador pode rodar antes do quadro do aoRolar: mede também o salto desde a última leitura */
+        var agora = performance.now(), salto = Math.abs(window.scrollY - ultY) / Math.min(50, Math.max(1, agora - ultT));
+        var rapido = salto > 1.2 || (vel > 1.2 && agora - ultT < 120);
         if (rapido || en.boundingClientRect.top < window.innerHeight) return naHora(en.target);
         var irmaos = Array.prototype.filter.call(en.target.parentNode.children, function (c) { return c.classList.contains('revelar'); });
         var i = Math.min(irmaos.indexOf(en.target), 3);
