@@ -611,3 +611,14 @@ body[data-com-pedido] .rodape { padding-bottom: var(--space-10); }
   .grade-servicos > li:last-child:nth-child(3n+1) > * { margin: 0; }
   .marca img { transition: opacity 0.5s var(--ease); }
 }
+
+/* ---------- Ajustes r3 (2026-10-20) ---------- */
+/* Avisos dentro de passo, card, plano e relatório */
+.passo .aviso-pendente, .card-servico .aviso-pendente, .relatorio__texto .aviso-pendente { margin-top: var(--space-3); }
+.cabeca + .aviso-pendente { margin-bottom: var(--space-6); }
+.plano:has(.aviso-pendente) { grid-template-rows: auto auto auto 1fr auto; }
+/* Onde fica no celular: texto primeiro (com horário e WhatsApp), mapa por último */
+@media (max-width: 899px) {
+  .local__mapa { order: 0; }
+  .local__fatos { display: grid; gap: var(--space-3); }
+}
