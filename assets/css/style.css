@@ -372,16 +372,16 @@ a.card-texto .card-foto__seta { text-decoration: underline; text-underline-offse
 .faixa-marcas__trilho { display: flex; width: max-content; animation: faixa 40s linear infinite; will-change: transform; }
 .faixa-marcas:hover .faixa-marcas__trilho { animation-play-state: paused; }
 .faixa-marcas ul { display: flex; align-items: center; gap: 64px; padding-right: 64px; }
-.faixa-marcas li { flex: none; display: flex; align-items: center; height: 40px; color: var(--ink); }
-.faixa-marcas img { height: 40px; width: auto; max-width: 180px; object-fit: contain; filter: grayscale(1); opacity: 0.5; transition: filter 0.2s, opacity 0.2s; }
+.faixa-marcas li { flex: none; display: flex; align-items: center; height: 50px; color: var(--ink); }
+.faixa-marcas img { height: calc(var(--k, 1) * 40px); width: auto; object-fit: contain; filter: grayscale(1); opacity: 0.5; transition: filter 0.2s, opacity 0.2s; }
 .faixa-marcas li:hover img { filter: none; opacity: 1; }
 .faixa-marcas__nome { font-family: var(--fonte-titulo); font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; opacity: 0.45; transition: opacity 0.2s, color 0.2s; }
 .faixa-marcas li:hover .faixa-marcas__nome { opacity: 1; color: var(--pool); }
 .faixa-marcas + .container .link-cta { margin-top: var(--space-5); }
 @keyframes faixa { to { transform: translate3d(-50%, 0, 0); } }
 @media (min-width: 900px) {
-  .faixa-marcas li { height: 48px; }
-  .faixa-marcas img { height: 48px; max-width: 210px; }
+  .faixa-marcas li { height: 60px; }
+  .faixa-marcas img { height: calc(var(--k, 1) * 48px); }
   .faixa-marcas__nome { font-size: 1.75rem; }
 }
 /* Movimento reduzido: sem animação, grade parada (2 colunas no celular, 4×2 no computador) */
