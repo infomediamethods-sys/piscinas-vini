@@ -47,7 +47,7 @@
   if (menu) menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { estado(false); }); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && menu && menu.dataset.aberto === 'true') estado(false); });
 
-  /* Entrada de seção (ajustes r4, 20/10/2026): só opacidade, curta, disparada 25% ANTES do bloco entrar na tela.
+  /* Entrada de seção (ajustes r4, 20/10/2026): só opacidade, curta, disparada meia tela ANTES do bloco entrar na tela.
      Numa rolagem rápida (>1,2 px/ms), ou se o bloco já está na tela ou acima dela, aparece na hora, sem
      transição: nada fica apagado nem "se realoca" quando a pessoa para de rolar. Atraso escalonado máx. 3 × 40ms. */
   var itens = document.querySelectorAll('.revelar');
@@ -78,7 +78,7 @@
         en.target.classList.add('visivel');
         en.target.addEventListener('transitionend', function () { en.target.style.transitionDelay = ''; }, { once: true });
       });
-    }, { rootMargin: '0px 0px 25% 0px', threshold: 0 });
+    }, { rootMargin: '0px 0px 50% 0px', threshold: 0 });
     itens.forEach(function (el) {
       if (el.getBoundingClientRect().top < window.innerHeight) naHora(el);
       else obs.observe(el);
