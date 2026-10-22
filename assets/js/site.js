@@ -89,7 +89,7 @@
       b.querySelector('[data-rotulo]').textContent = todos ? 'Adicionado ao pedido' : 'Adicionar ao pedido';
     });
     var itens = ids.map(function (k) { return pedido[k] + '× ' + nomes[k]; }).join(', ');
-    enviar.href = link('Olá! Vim pelo site e quero pedir: ' + itens + '. Qual o valor e o prazo? Entrega ou retirada?');
+    enviar.href = link('Olá! Vim pelo site e quero pedir: ' + itens + '. Qual o valor e o prazo de entrega?');
     grade.querySelectorAll('[data-produto]').forEach(function (c) {
       var q = pedido[c.getAttribute('data-produto')] || 0;
       var b = c.querySelector('[data-adicionar]');
