@@ -321,7 +321,7 @@ strong { font-weight: 500; }
 .passo:last-child { border-bottom: 1px solid var(--linha); }
 .passo__num { font-family: var(--fonte-titulo); font-size: 2.5rem; line-height: 1; color: var(--pool); font-weight: 400; }
 .passo h3 { margin-top: var(--space-2); }
-.passo p { color: var(--ink-2); }
+.passo p { color: var(--ink-2); text-wrap: pretty; }
 .passos-grade .acoes { margin-top: var(--space-6); }
 .passos--colunas { gap: 0; }
 @media (min-width: 900px) {
@@ -463,6 +463,8 @@ a.card-texto .card-foto__seta { text-decoration: underline; text-underline-offse
 }
 @media (min-width: 600px) { .grade-servicos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 900px) { .grade-servicos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); } }
+/* 9 serviços (r6): em 2 colunas o último fica sozinho → ocupa a fileira inteira */
+@media (min-width: 600px) and (max-width: 899px) { .grade-servicos > li:last-child:nth-child(odd) { grid-column: 1 / -1; } }
 
 .planos { display: grid; gap: var(--space-5); }
 .plano { display: grid; grid-template-rows: auto auto 1fr auto; gap: var(--space-4); padding: var(--space-5); border: 2px solid transparent; border-radius: var(--raio); background: var(--white); position: relative; }
@@ -630,17 +632,11 @@ body[data-com-pedido] .rodape { padding-bottom: var(--space-10); }
 .um-lugar__midia { grid-column: 1 / -1; }
 @media (min-width: 900px) {
   .um-lugar__midia { margin-top: 0; aspect-ratio: 21 / 9; }
-  .grade-servicos > li:last-child:nth-child(3n+1) { grid-column: 1 / -1; grid-template-columns: auto minmax(0, 1.1fr) minmax(0, 1.4fr) minmax(0, 1.4fr) auto; grid-template-rows: none; align-items: center; column-gap: var(--space-6); }
-  .grade-servicos > li:last-child:nth-child(3n+1) > * { margin: 0; }
   .marca img { transition: opacity 0.5s var(--ease); }
 }
 
 /* ---------- Ajustes r3 (2026-10-20) ---------- */
-/* Avisos dentro de passo, card, plano e relatório */
-.passo .aviso-pendente, .card-servico .aviso-pendente, .relatorio__texto .aviso-pendente { margin-top: var(--space-3); }
-.relatorio__texto .aviso-pendente { margin-top: var(--space-5); }
 .cabeca + .aviso-pendente { margin-bottom: var(--space-6); }
-.plano:has(.aviso-pendente) { grid-template-rows: auto auto auto 1fr auto; }
 /* Onde fica no celular: texto primeiro (com horário e WhatsApp), mapa por último */
 @media (max-width: 899px) {
   .local__mapa { order: 0; }
@@ -693,3 +689,8 @@ body[data-com-pedido] .rodape { padding-bottom: var(--space-10); }
   .passos-grade .passos { order: 3; }
   .passos-grade .acoes { order: 4; margin-top: 0; }
 }
+
+/* ---------- Ajustes r6 (2026-10-21) ---------- */
+/* Instalação em produtos.html: card de ícone + texto, sem as 4 linhas do card-texto */
+.split--meio > .card-texto { grid-template-rows: auto auto; }
+@media (min-width: 900px) { .split--meio > .card-texto p { font-size: 1.125rem; } }
