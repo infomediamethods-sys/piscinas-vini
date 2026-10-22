@@ -55,17 +55,31 @@
     return c;
   }
   bolhas.forEach(function (b) { b.spr = fazerSprite(b.raio); b.meio = b.spr.width / dpr / 2; });
+  /* Bolhas esticadas (Armin, 22/10, celular): o canvas era medido UMA vez, quando o script rodava. Se o herói mudava de
+     tamanho depois sem evento de resize (fonte do título carregando e aumentando o texto, WebView do WhatsApp abrindo,
+     página voltando do cache do navegador), o desenho ficava com a medida velha e o CSS esticava: bolha oval.
+     Agora o canvas é remedido sempre que o tamanho real dele muda (ResizeObserver) e nos eventos de reabertura. */
   function dimensionar() {
-    L = canvas.clientWidth; A = canvas.clientHeight;
-    canvas.width = Math.round(L * dpr); canvas.height = Math.round(A * dpr);
+    var l = canvas.clientWidth, a = canvas.clientHeight;
+    if (!l || !a) return;
+    var w = Math.round(l * dpr), h = Math.round(a * dpr);
+    if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+    L = l; A = a;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    medir();
   }
   dimensionar();
   window.addEventListener('resize', dimensionar);
+  window.addEventListener('orientationchange', dimensionar);
+  window.addEventListener('load', dimensionar);
+  window.addEventListener('pageshow', dimensionar);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(dimensionar);
+  if ('ResizeObserver' in window) new ResizeObserver(dimensionar).observe(canvas);
 
   var rodando = false, ultimo = 0, t = 0;
   function quadro(agora) {
     if (!rodando) return;
+    if (!A || canvas.width !== Math.round(L * dpr) || canvas.height !== Math.round(A * dpr)) dimensionar();
     var dt = Math.min(0.05, (agora - (ultimo || agora)) / 1000); ultimo = agora; t += dt;
     ctx.clearRect(0, 0, L, A);
     /* Ajustes r1 (A1): cada bolha tem opacidade própria que persegue o alvo com suavização, nos dois sentidos,
