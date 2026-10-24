@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- URL provisória: o /lancar troca pelo domínio do cliente -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://infomediamethods-sys.github.io/piscinas-vini/</loc></url>
-  <url><loc>https://infomediamethods-sys.github.io/piscinas-vini/contato.html</loc></url>
-  <url><loc>https://infomediamethods-sys.github.io/piscinas-vini/limpeza.html</loc></url>
-  <url><loc>https://infomediamethods-sys.github.io/piscinas-vini/politica-de-privacidade.html</loc></url>
-  <url><loc>https://infomediamethods-sys.github.io/piscinas-vini/produtos-acessorios.html</loc></url>
-  <url><loc>https://infomediamethods-sys.github.io/piscinas-vini/produtos-aquecedores.html</loc></url>
-  <url><loc>https://infomediamethods-sys.github.io/piscinas-vini/produtos-aspiradores.html</loc></url>
-  <url><loc>https://infomediamethods-sys.github.io/piscinas-vini/produtos-bombas.html</loc></url>
-  <url><loc>https://infomediamethods-sys.github.io/piscinas-vini/produtos-capas.html</loc></url>
-  <url><loc>https://infomediamethods-sys.github.io/piscinas-vini/produtos-cloradores.html</loc></url>
-  <url><loc>https://infomediamethods-sys.github.io/piscinas-vini/produtos-filtros.html</loc></url>
-  <url><loc>https://infomediamethods-sys.github.io/piscinas-vini/produtos-iluminacao.html</loc></url>
-  <url><loc>https://infomediamethods-sys.github.io/piscinas-vini/produtos.html</loc></url>
-  <url><loc>https://infomediamethods-sys.github.io/piscinas-vini/servicos.html</loc></url>
+  <url><loc>https://vavapiscinaspro.com.br/</loc><lastmod>2026-10-24</lastmod><priority>1.0</priority></url>
+  <url><loc>https://vavapiscinaspro.com.br/contato</loc><lastmod>2026-10-24</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vavapiscinaspro.com.br/limpeza</loc><lastmod>2026-10-24</lastmod><priority>0.9</priority></url>
+  <url><loc>https://vavapiscinaspro.com.br/politica-de-privacidade</loc><lastmod>2026-10-24</lastmod><priority>0.2</priority></url>
+  <url><loc>https://vavapiscinaspro.com.br/produtos</loc><lastmod>2026-10-24</lastmod><priority>0.8</priority></url>
+  <url><loc>https://vavapiscinaspro.com.br/produtos-acessorios</loc><lastmod>2026-10-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://vavapiscinaspro.com.br/produtos-aquecedores</loc><lastmod>2026-10-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://vavapiscinaspro.com.br/produtos-aspiradores</loc><lastmod>2026-10-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://vavapiscinaspro.com.br/produtos-bombas</loc><lastmod>2026-10-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://vavapiscinaspro.com.br/produtos-capas</loc><lastmod>2026-10-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://vavapiscinaspro.com.br/produtos-cloradores</loc><lastmod>2026-10-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://vavapiscinaspro.com.br/produtos-filtros</loc><lastmod>2026-10-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://vavapiscinaspro.com.br/produtos-iluminacao</loc><lastmod>2026-10-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://vavapiscinaspro.com.br/servicos</loc><lastmod>2026-10-24</lastmod><priority>0.9</priority></url>
 </urlset>
